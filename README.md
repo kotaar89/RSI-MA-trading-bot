@@ -1,4 +1,4 @@
-# 🤖 Bybit Futures Bot — RSI + MA Combo
+# 🤖 Bybit Futures Bot — RSI + MA
 
 Торговый бот для Bybit Futures с комбинированной стратегией RSI + скользящие средние.
 
