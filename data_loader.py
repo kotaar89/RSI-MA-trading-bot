@@ -1,7 +1,8 @@
 """
-usage:
-    python data_loader.py                  # download with config.py settings
-    python data_loader.py ETHUSDT 60 90    # download with custom settings (symbol, tf, days)
+Модуль загрузки исторических данных с Bybit
+Использование:
+    python data_loader.py                  # скачать по настройкам из config.py
+    python data_loader.py ETHUSDT 60 90    # символ, таймфрейм, дней
 """
 
 import time

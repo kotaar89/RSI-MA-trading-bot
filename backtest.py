@@ -69,14 +69,14 @@ def run_backtest(days: int = 90, force_download: bool = False):
     def close_trade(exit_price, reason, i):
         nonlocal position, entry_price, entry_idx
         fee_pct = (entry_price + exit_price) * TAKER_FEE * LEVERAGE / entry_price * 100
-        slip_pct = SLIPPAGE * 100
+
 
         if position == "long":
             raw_pnl = (exit_price - entry_price) / entry_price * LEVERAGE * 100
         else:
             raw_pnl = (entry_price - exit_price) / entry_price * LEVERAGE * 100
 
-        net_pnl = raw_pnl - fee_pct - slip_pct
+        net_pnl = raw_pnl - fee_pct 
 
         trades.append({
             "type":       position,

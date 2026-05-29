@@ -2,8 +2,10 @@ import time
 import logging
 import pandas as pd
 import numpy as np
+
 from datetime import datetime
 from pybit.unified_trading import HTTP
+
 from config import (
     API_KEY, API_SECRET, SYMBOL, INTERVAL,
     FAST_MA, SLOW_MA, RSI_PERIOD,
@@ -151,9 +153,14 @@ class BybitFuturesBot:
 
     # Закрытие позиции
     def close_position(self, price: float, reason: str = "Сигнал"):
+        
         if not self.position:
             return
         try:
+            # Отменяем все активные ордера (SL, TP)
+            self.client.cancel_all_orders(category="linear", symbol=SYMBOL)
+            time.sleep(0.5)  # небольшая пауза
+        
             side = "Sell" if self.position == "long" else "Buy"
             qty = round(TRADE_USDT * LEVERAGE / self.entry_price, 3)
 
@@ -233,8 +240,15 @@ class BybitFuturesBot:
 
                 last = df.iloc[-1]
                 price = self.get_price()
-                signal = df["signal"].iloc[-2]  # -2 чтобы брать закрытую свечу
+                signal = df["signal"].iloc[-2] 
                 
+                signal_price = df["close"].iloc[-2]
+                
+                if abs(price - signal_price) / signal_price > 0.005:  # 0.5%
+                    log.warning(f"Цена ушла: сигнал {signal_price}, рынок {price}")
+                    continue  # не входим
+
+
                 # Логирование (не чаще чем раз в 5 минут для больших ТФ)
                 if time.time() - last_log_time > 300:
                     log.info(
